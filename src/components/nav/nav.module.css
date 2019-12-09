@@ -1,0 +1,34 @@
+.container{
+    display: flex;
+    align-items: center;
+    background-color: black;
+    color:white;
+    height: 64px;
+}
+
+.icon{
+    font-size: 2rem;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.container h2{
+    margin-left: 50px;
+}
+
+.container p{
+    margin-left: 150px;
+    justify-content: center;
+}
+
+.container select{
+    color:white;
+    font-size: large;
+    margin-left: 50px;
+    outline-color: white;
+}
+
+.container select::after{
+    content: ">";
+    color:white;
+}
