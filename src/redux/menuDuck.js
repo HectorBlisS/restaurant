@@ -1,16 +1,19 @@
 
 let initial = {
     groups: {
-        DINNER: {
-            name: "DINNER",
-            pic: "https://cdn.loveandlemons.com/wp-content/uploads/2019/09/dinner.jpg"
-        },
         BREAKFAST: {
-            name: "BREAKFAST",
+            _id: "BREAKFAST",
+            name: "Desayunos",
             pic: "https://i.cbc.ca/1.5192919.1561664247!/fileImage/httpImage/image.jpg_gen/derivatives/original_780/great-canadian-breakfast-sandwich.jpg"
         },
+        DINNER: {
+            _id: "DINNER",
+            name: "Resto del  día",
+            pic: "https://cdn.loveandlemons.com/wp-content/uploads/2019/09/dinner.jpg"
+        },
         DRINKS: {
-            name: "DRINKS",
+            _id: "DRINKS",
+            name: "Bebidas",
             pic: "https://www.sustagen.com.au/sites/site.prod1.sustagen.com.au/files/2019-03/chocolate-drink-mocha-delight.jpg"
         }
     },
@@ -19,7 +22,7 @@ let initial = {
             name: "Café Americano",
             _id: "ñsdkf",
             price: 5,
-            categories: ["BREAKFAST"],
+            categories: { BREAKFAST: true },
             subCategory: "BREAKFAST",
             details: "Café colombiano con agua",
             pic: "https://www.cubaneandoconmario.com/wp-content/uploads/2017/01/Caf%C3%A9-americano.jpg"
@@ -28,16 +31,37 @@ let initial = {
             name: "Hamburguesa Simple",
             _id: "ofpmdf432",
             price: 10,
-            categories: ["DINNER"],
+            categories: { DINNER: true },
             subCategory: "Hamburguesas",
             details: "La mejor top sirloin de la zona",
-            pic: "https://www.seekpng.com/png/detail/408-4084388_1-modelos-de-banner-de-hamburguers.png"
+            pic: "https://www.seekpng.com/png/detail/408-4084388_1-modelos-de-banner-de-hamburguers.png",
+            options: [{
+                text: "SIN CEBOLLA",
+                price: 0
+            },
+            {
+                text: "SIN MAYONESA",
+                price: 0
+            },
+            {
+                text: "SIN MOSTAZA",
+                price: 0
+            },
+            {
+                text: "CON QUESO",
+                price: 1
+            },
+            {
+                text: "CON HUEVO",
+                price: 1
+            }
+            ]
         },
         "8d8f8hf8": {
             name: "Onion Rings",
             _id: "8d8f8hf8",
             price: 0,
-            categories: ["DINNER"],
+            categories: { DINNER: true },
             subCategory: "Acompañamientos",
             details: "Grasosos y deliciosos",
             pic: "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/7f539fc41a5543aebfe03afed73a0b48/BFV9112_MozzarellaStickOnionRings.jpg"
@@ -45,7 +69,8 @@ let initial = {
         "99d9jjgj": {
             _id: "99d9jjgj",
             name: "Agua",
-            categories: ["DRINKS", "DINNER"],
+            price: 5,
+            categories: { DRINKS: true, DINNER: true },
             details: "Sin olor, sin sabor, simplemente perfecta",
             pic: "https://5.imimg.com/data5/GV/DP/MY-3831378/500ml-plastic-water-bottle-500x500.jpg",
             sizes: [
@@ -60,13 +85,50 @@ let initial = {
             ]
         },
     },
-    orders: {},
-    current: {}
+    order: [],
+    orders: [],
+    category: {
+        _id: "BREAKFAST",
+        name: "Desayunos",
+        pic: "https://i.cbc.ca/1.5192919.1561664247!/fileImage/httpImage/image.jpg_gen/derivatives/original_780/great-canadian-breakfast-sandwich.jpg"
+    },
 }
 
 export default function reducer(state = initial, action) {
     switch (action.type) {
+        case RESET_ORDER:
+            return { ...state, order: [] }
+        case ADD_ORDER:
+            return { ...state, orders: [...state.orders, { ...action.payload }] }
+        case ADD_TO_ORDER:
+            return { ...state, order: [...state.order, { ...action.payload }] }
+        case CATEGORY_SELECTED:
+            return { ...state, category: { ...action.payload } }
         default:
             return { ...state }
+    }
+}
+
+let CATEGORY_SELECTED = "CATEGORY_SELECTED"
+let ADD_TO_ORDER = "ADD_TO_ORDER"
+let ADD_ORDER = "ADD_ORDER"
+let RESET_ORDER = "RESET_ORDER"
+
+export function addOrderAction(array) {
+    return dispatch => {
+        dispatch({ type: ADD_ORDER, payload: { [Date.now()]: [...array] } })
+        dispatch({ type: RESET_ORDER })
+    }
+}
+
+export function addToOrderAction(item) {
+    return dispatch => {
+        dispatch({ type: ADD_TO_ORDER, payload: { ...item } })
+    }
+}
+
+export function selectCategoryAction(category) {
+    return dispatch => {
+        dispatch({ type: CATEGORY_SELECTED, payload: category })
     }
 }
