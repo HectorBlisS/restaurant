@@ -87,6 +87,7 @@ let initial = {
     },
     order: [],
     orders: [],
+    history: [],
     category: {
         _id: "BREAKFAST",
         name: "Desayunos",
@@ -96,10 +97,19 @@ let initial = {
 
 export default function reducer(state = initial, action) {
     switch (action.type) {
+        case "GET_INITIAL_DATA":
+            let m = JSON.parse(localStorage.getItem('menu'))
+            if (m) return { ...state, ...m }
+            else return { ...state }
+
+        case SAVE_FOOD:
+            return { ...state, items: { ...action.payload } }
+        case CLOSE_ORDER:
+            return { ...state, orders: [...action.payload.orders], history: { ...action.payload.history } }
         case RESET_ORDER:
             return { ...state, order: [] }
         case ADD_ORDER:
-            return { ...state, orders: [...state.orders, { ...action.payload }] }
+            return { ...state, orders: [...action.payload] }
         case ADD_TO_ORDER:
             return { ...state, order: [...state.order, { ...action.payload }] }
         case CATEGORY_SELECTED:
@@ -113,10 +123,48 @@ let CATEGORY_SELECTED = "CATEGORY_SELECTED"
 let ADD_TO_ORDER = "ADD_TO_ORDER"
 let ADD_ORDER = "ADD_ORDER"
 let RESET_ORDER = "RESET_ORDER"
+let CLOSE_ORDER = "CLOSE_ORDER"
+let SAVE_FOOD = "SAVE_FOOD"
+
+export function saveFoodAction(food) {
+    return (dispatch, getState) => {
+        let { menu } = getState()
+        let { items } = menu
+        if (!food._id) {
+            food._id = Date.now()
+        }
+        items[food._id] = food
+        let m = { ...menu, items }
+        localStorage.menu = JSON.stringify(m)
+        dispatch({ type: SAVE_FOOD, payload: { ...items } })
+    }
+}
+
+export function closeOrderAction(order) {
+    return (dispatch, getState) => {
+        let { orders, history } = getState().menu
+        let { menu } = getState()
+        orders.splice(orders.indexOf(order), 1)
+        history.push(order)
+        let m = { ...menu, orders, history }
+        localStorage.menu = JSON.stringify(m)
+        dispatch({ type: CLOSE_ORDER, payload: { history, orders } })
+    }
+}
 
 export function addOrderAction(array) {
-    return dispatch => {
-        dispatch({ type: ADD_ORDER, payload: { [Date.now()]: [...array] } })
+    return (dispatch, getState) => {
+        let { orders } = getState().menu
+        let { menu } = getState()
+        let order = {
+            date: Date.now(),
+            items: [...array],
+            finished: false
+        }
+        orders.push(order)
+        let m = { ...menu, orders, }
+        localStorage.menu = JSON.stringify(m)
+        dispatch({ type: ADD_ORDER, payload: [...orders] })
         dispatch({ type: RESET_ORDER })
     }
 }

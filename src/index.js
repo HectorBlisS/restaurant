@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import generateStore from './redux/store'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
+import 'toastr/build/toastr.css'
 
 
 let store = generateStore()
