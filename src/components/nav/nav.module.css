@@ -1,19 +1,20 @@
 .container{
     display: flex;
     align-items: center;
-    background-color: black;
+    background-color: #3a90df;
     color:white;
     height: 64px;
 }
 
 .icon{
-    font-size: 2rem;
+    font-size: 24px;
     margin-left: 20px;
     cursor: pointer;
     margin-right: 20px;
 }
 
 .container h2{
+    margin: 0px;
     margin-left: 50px;
     color:white;
 }
@@ -21,6 +22,7 @@
 .container p{
     margin-left: 150px;
     justify-content: center;
+
 }
 
 .container select{
@@ -39,15 +41,21 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    box-shadow: 0px 5px 8px #ccc;
     padding:10px 0;
     cursor: pointer;
     margin:20px 0;
     transition:all .3s ease;
 }
+.navButton p{
+    margin: 0px;
+}
+
+.navButton:hover{
+    color: #3a90df;
+}
 
 .navButton:active{
-    box-shadow: 1px 6px 9px grey;
+    color: #3a90df;
 }
 
 .footerButton{

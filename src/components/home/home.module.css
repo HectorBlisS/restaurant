@@ -7,6 +7,9 @@
     align-items: center;
 }
 
+.input{
+    margin: 24px 0;
+}
 .form{
     display: flex;
     flex-direction: column;

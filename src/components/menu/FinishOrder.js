@@ -9,6 +9,7 @@ export default function FinishOrder({ onClick, className, order }) {
         <div className={className}>
             <p>Orden: ${total}</p>
             <button onClick={onClick} className={styles.finishButton}>
+
                 Ordenar
                 <FontAwesomeIcon icon={faPaperPlane} />
             </button>

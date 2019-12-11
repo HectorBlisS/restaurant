@@ -15,8 +15,9 @@ export default function Home() {
 
             <div className={styles.form}>
                 <Divider />
-                <Input value={form.email} onChange={onChange} name="email" placeholder="Email" />
-                <Input type="password" value={form.password} onChange={onChange} name="password" placeholder="Contraseña" />
+                <Input value={form.email} onChange={onChange} size="large"  name="email" placeholder="Email" />
+                <br/>
+                <Input type="password" value={form.password} onChange={onChange} size="large"  name="password" placeholder="Contraseña" />
                 <br />
                 <Button size="large">
                     Entrar
