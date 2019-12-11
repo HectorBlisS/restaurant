@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { Modal } from 'antd'
 import styles from './menu.module.css'
 
-export default function FoodModal({ onAccept, food = {}, visible, onCancel, editing }) {
+export default function FoodModal({ onRemove, onAccept, food = {}, visible, onCancel, editing }) {
     let [quantity, setQuantity] = useState(food.quantity || 1)
     let [options, setOptions] = useState(food.extras || {})
     let [unitary, setUnitary] = useState(food.price || 0)
     let [total, setTotal] = useState(food.price || 0)
 
 
+    useEffect(() => {
+        setOptions({ ...food.extras })
+    }, [food.extras])
     useEffect(() => {
         // console.log(food.options)
         if (editing) {
@@ -29,7 +32,7 @@ export default function FoodModal({ onAccept, food = {}, visible, onCancel, edit
             ...food,
             price: unitary,
             optionsSelected: Object.values(options).filter(o => Boolean(o)),
-            extras: options,
+            extras: { ...options },
             quantity,
             total
         }
@@ -40,11 +43,11 @@ export default function FoodModal({ onAccept, food = {}, visible, onCancel, edit
 
     function getTotal() {
         let t = Object.values(options).reduce((acc, item) => {
-            if (item) return acc + item.price
-            else return acc
+            if (item) return acc + Number(item.price)
+            else return Number(acc)
         }, 0)
-        let u = t + food.price
-        let tot = u * quantity
+        let u = t + Number(food.price)
+        let tot = u * Number(quantity)
         setUnitary(u)
         setTotal(tot)
     }
@@ -59,19 +62,24 @@ export default function FoodModal({ onAccept, food = {}, visible, onCancel, edit
 
     function optionClicked(item) {
         if (options[item.text]) {
-            setOptions({ ...options, [item.text]: false })
+            let ops = { ...options }
+            ops[item.text] = false
+            setOptions({ ...options, ...ops })
         }
         else setOptions({ ...options, [item.text]: { ...item } })
     }
 
     function renderOption(item, i) {
-        let ops = { ...food.extras, ...options }
         return (
             <div onClick={() => optionClicked(item)} key={i} className={styles.optionCard}>
-                <input checked={ops[item.text]} type="checkbox" />
+                <input checked={options[item.text]} type="checkbox" />
                 <span>{item.text} {item.price && `+ $ ${item.price}`}</span>
             </div>
         )
+    }
+
+    function removeItem() {
+        onRemove(food)
     }
 
     return (
@@ -106,17 +114,23 @@ export default function FoodModal({ onAccept, food = {}, visible, onCancel, edit
                                 +
                         </button>
                             <div className={styles.options}>
-                            {food.options && food.options.map(renderOption)}
-                        </div>
+                                {food.options && food.options.map(renderOption)}
+                            </div>
 
+
+                        </div>
 
                     </div>
 
                 </div>
-
-                </div>
-                <hr className={styles.line}/>
+                <hr className={styles.line} />
                 <div className={styles.modalFooter}>
+                    {editing && <button
+                        style={{ color: "orange" }}
+                        onClick={removeItem}
+                    >
+                        ELIMINAR
+                    </button>}
                     <button
                         onClick={onCancel}
                     >
@@ -124,7 +138,7 @@ export default function FoodModal({ onAccept, food = {}, visible, onCancel, edit
                     </button>
                     <button
                         onClick={placeOrder}
-                        style={{ backgroundColor: "#3a90df", color:"white" }}>
+                        style={{ backgroundColor: "#3a90df", color: "white" }}>
                         {editing ? "ACTUALIZAR" : "AGREGAR"}
                     </button>
                 </div>

@@ -113,12 +113,14 @@ export default function reducer(state = initial, action) {
         case SAVE_FOOD:
             return { ...state, items: { ...action.payload } }
         case CLOSE_ORDER:
-            return { ...state, orders: [...action.payload.orders], history: { ...action.payload.history } }
+            return { ...state, orders: [...action.payload.orders], history: [...action.payload.history] }
         case RESET_ORDER:
             return { ...state, order: [] }
         case ADD_ORDER:
             return { ...state, orders: [...action.payload] }
         case ADD_TO_ORDER:
+            return { ...state, order: [...action.payload] }
+        case REMOVE_FROM_ORDER:
             return { ...state, order: [...action.payload] }
         case CATEGORY_SELECTED:
             return { ...state, category: { ...action.payload } }
@@ -130,6 +132,7 @@ export default function reducer(state = initial, action) {
 let CATEGORY_SELECTED = "CATEGORY_SELECTED"
 let ADD_TO_ORDER = "ADD_TO_ORDER"
 let ADD_ORDER = "ADD_ORDER"
+let REMOVE_FROM_ORDER = "REMOVE_FROM_ORDER"
 let RESET_ORDER = "RESET_ORDER"
 let CLOSE_ORDER = "CLOSE_ORDER"
 let SAVE_FOOD = "SAVE_FOOD"
@@ -191,7 +194,7 @@ export function addOrderAction(array) {
             finished: false
         }
         orders.push(order)
-        let m = { ...menu, orders, }
+        let m = { ...menu, orders, order: [] }
         localStorage.menu = JSON.stringify(m)
         dispatch({ type: ADD_ORDER, payload: [...orders] })
         dispatch({ type: RESET_ORDER })
@@ -201,10 +204,25 @@ export function addOrderAction(array) {
 export function addToOrderAction(item) {
     return (dispatch, getState) => {
         let { order } = getState().menu
-        if (item.index) {
-            order.splice(item.index, 1, item)
-        } else order.push(item)
-        dispatch({ type: ADD_TO_ORDER, payload: [...order] })
+        let o = []
+        if (item.key) {
+            o = order.map(it => {
+                if (it.key === item.key) return item
+                return it
+            })
+        } else {
+            item.key = Date.now()
+            o = [...order, item]
+        }
+        dispatch({ type: ADD_TO_ORDER, payload: [...o] })
+    }
+}
+
+export function removeItemFromOrderAction(item) {
+    return (dispatch, getState) => {
+        let { order } = getState().menu
+        order.splice(item.index, 1)
+        dispatch({ type: REMOVE_FROM_ORDER, payload: [...order] })
     }
 }
 

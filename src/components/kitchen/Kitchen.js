@@ -39,10 +39,16 @@ function Kitchen({ closeOrderAction, orders }) {
                 <p>Mesa: 1</p>
             </div>
             {order.items.map((item, index) => {
+                let options = []
+                for (let k in item.extras) {
+                    if (item.extras[k]) {
+                        options.push(k)
+                    }
+                }
                 return (
                     <div key={index}>
                         <h3 key={index}>{item.name}</h3>
-                        {item.extras && Object.keys(item.extras).map((op, ind) => <p key={ind} >{op}</p>)}
+                        {options.map((op, ind) => <p key={ind} >{op}</p>)}
                     </div>
                 )
             })}

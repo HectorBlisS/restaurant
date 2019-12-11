@@ -4,10 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/fontawesome-free-solid'
 import { Button } from 'antd'
 import FoodModal from './FoodModal'
-import { addToOrderAction } from '../../redux/menuDuck'
+import { addToOrderAction, removeItemFromOrderAction } from '../../redux/menuDuck'
 import { connect } from 'react-redux'
 
-function Resumen({ addToOrderAction, order }) {
+function Resumen({ removeItemFromOrderAction, addToOrderAction, order }) {
     let [open, setOpen] = useState(false)
     let [food, setFood] = useState(undefined)
 
@@ -29,7 +29,18 @@ function Resumen({ addToOrderAction, order }) {
         addToOrderAction(item)
     }
 
+    function removeItem(item) {
+        setOpen(false)
+        removeItemFromOrderAction(item)
+    }
+
     function renderCard(item, i) {
+        let options = []
+        for (let k in item.extras) {
+            if (item.extras[k]) {
+                options.push(k)
+            }
+        }
         return (
             <div className={styles.resumenCard}>
                 <div key={i} className={styles.cardContent}>
@@ -44,7 +55,7 @@ function Resumen({ addToOrderAction, order }) {
                     </Button>
                 </div>
                 <div>
-                    {item.extras && Object.keys(item.extras).map(renderOption)}
+                    {options.map(renderOption)}
                 </div>
             </div>
 
@@ -56,6 +67,7 @@ function Resumen({ addToOrderAction, order }) {
             {order.map(renderCard)}
             {/* Modal */}
             <FoodModal
+                onRemove={removeItem}
                 onAccept={updateItem}
                 editing={true}
                 food={food}
@@ -69,4 +81,4 @@ function mapState() {
     return {}
 }
 
-export default connect(mapState, { addToOrderAction })(Resumen)
+export default connect(mapState, { removeItemFromOrderAction, addToOrderAction })(Resumen)
