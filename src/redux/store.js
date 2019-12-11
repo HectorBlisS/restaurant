@@ -1,6 +1,7 @@
 import { createStore, combineReducers, compose, applyMiddleware } from 'redux'
 import menuReducer from './menuDuck'
 import thunk from 'redux-thunk'
+import { setDataListeners } from '../services/firebase'
 
 let rootReducer = combineReducers({
     menu: menuReducer
@@ -14,5 +15,6 @@ export default function generateStore() {
     ));
     // initialize data getter
     store.dispatch({ type: "GET_INITIAL_DATA" })
+    setDataListeners(store.dispatch, store.getState)
     return store
 }

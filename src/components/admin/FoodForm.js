@@ -19,7 +19,7 @@ export default function FoodForm({ categories, food, onChange }) {
                 Precio:
             <Input type="number" name="price" onChange={onChange} value={food.price} size="large" placeholder="Precio" />
             </p>
-            <p>
+            <div>
                 Categoría:
                 <Select
                     mode="multiple"
@@ -32,7 +32,7 @@ export default function FoodForm({ categories, food, onChange }) {
 
 
                 </Select>
-            </p>
+            </div>
             <p>
                 Subcategoría:
             <Input name="subCategory" onChange={onChange} value={food.subCategory} size="large" placeholder="Subcategoría" />

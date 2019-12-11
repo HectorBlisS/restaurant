@@ -2,18 +2,29 @@ import React, { useState, useEffect } from 'react'
 import { Modal } from 'antd'
 import styles from './menu.module.css'
 
-export default function FoodModal({ onAccept, food, visible, onCancel }) {
+export default function FoodModal({ onAccept, food = {}, visible, onCancel, editing }) {
     let [quantity, setQuantity] = useState(1)
-    let [options, setOptions] = useState({})
-    let [unitary, setUnitary] = useState(food.price)
-    let [total, setTotal] = useState(food.price)
+    let [options, setOptions] = useState(food.options || {})
+    let [unitary, setUnitary] = useState(food.price || 0)
+    let [total, setTotal] = useState(food.price || 0)
+
+
+    // useEffect(() => {
+    //     // console.log(food.options)
+    //     if (editing) {
+    //         setOptions({ ...food.options })
+    //         setUnitary(food.price)
+    //         setQuantity(food.quantity)
+    //         // console.log(food)
+    //     } else {
+    //         setQuantity(1)
+    //     }
+    // }, [food])
 
     useEffect(() => {
         getTotal()
     }, [options, quantity, food])
-    useEffect(() => {
-        setQuantity(1)
-    }, [food])
+
 
 
     function placeOrder() {
@@ -42,7 +53,6 @@ export default function FoodModal({ onAccept, food, visible, onCancel }) {
     function changeQuantity(add) {
         if (add && quantity < 50) {
             setQuantity(++quantity)
-
             return
         }
         if (quantity > 1) setQuantity(--quantity)
@@ -106,7 +116,7 @@ export default function FoodModal({ onAccept, food, visible, onCancel }) {
                     <button
                         onClick={placeOrder}
                         style={{ backgroundColor: "green" }}>
-                        AGREGAR
+                        {editing ? "ACTUALIZAR" : "AGREGAR"}
                     </button>
                 </div>
 

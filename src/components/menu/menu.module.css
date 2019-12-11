@@ -115,8 +115,9 @@ font-size: 2rem;
 .resumenCard div{
     margin-left: 10px;
 }
-.resumenCard p{
+.resumenCard p, .resumenCard h2{
     font-weight: bold;
+    margin: 0;
 }
 .resumenCard:active{
     box-shadow: 2px 10px 8px #ccc;
@@ -146,4 +147,13 @@ font-size: 2rem;
     background-color:#0AC9C9;
     color:white;
     font-size: 2rem;
+}
+
+.icon{
+    position: absolute; 
+    right: -120px;
+    margin-right: 0;
+}
+.icon:active{
+    color:orange;
 }

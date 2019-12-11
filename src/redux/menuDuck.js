@@ -1,3 +1,5 @@
+import { createUser } from '../services/firebase'
+import toastr from 'toastr'
 
 let initial = {
     groups: {
@@ -93,6 +95,7 @@ let initial = {
         name: "Desayunos",
         pic: "https://i.cbc.ca/1.5192919.1561664247!/fileImage/httpImage/image.jpg_gen/derivatives/original_780/great-canadian-breakfast-sandwich.jpg"
     },
+    users: []
 }
 
 export default function reducer(state = initial, action) {
@@ -102,6 +105,11 @@ export default function reducer(state = initial, action) {
             if (m) return { ...state, ...m }
             else return { ...state }
 
+        case UPDATE_FROM_FIREBASE:
+            return { ...state, ...action.payload }
+
+        case CREATE_ADMIN_USER_SUCCESS:
+            return { ...state, users: { ...action.payload } }
         case SAVE_FOOD:
             return { ...state, items: { ...action.payload } }
         case CLOSE_ORDER:
@@ -125,6 +133,27 @@ let ADD_ORDER = "ADD_ORDER"
 let RESET_ORDER = "RESET_ORDER"
 let CLOSE_ORDER = "CLOSE_ORDER"
 let SAVE_FOOD = "SAVE_FOOD"
+let CREATE_ADMIN_USER = "CREATE_ADMIN_USER"
+let CREATE_ADMIN_USER_SUCCESS = "CREATE_ADMIN_USER_SUCCESS"
+let CREATE_ADMIN_USER_ERROR = "CREATE_ADMIN_USER_ERROR"
+let UPDATE_FROM_FIREBASE = "UPDATE_FROM_FIREBASE"
+
+export function createUserAction(user) {
+    return (dispatch, getState) => {
+        let { menu } = getState()
+        let { users } = menu
+        dispatch({ type: CREATE_ADMIN_USER })
+        return createUser(user)
+            .then(data => {
+                console.log(data)
+                users.unshift(data)
+                let m = { ...menu, users }
+                localStorage.menu = JSON.stringify(m)
+                dispatch({ type: CREATE_ADMIN_USER_SUCCESS, payload: users })
+            })
+            .catch(e => toastr.error(e.message))
+    }
+}
 
 export function saveFoodAction(food) {
     return (dispatch, getState) => {
@@ -178,5 +207,18 @@ export function addToOrderAction(item) {
 export function selectCategoryAction(category) {
     return dispatch => {
         dispatch({ type: CATEGORY_SELECTED, payload: category })
+    }
+}
+
+
+/// inception stuff
+
+export function updateUsersFromDBAction(array) {
+    return (dispatch, getState) => {
+        let { menu } = getState()
+        let { users } = menu
+        let m = { ...menu, users: [...array] }
+        localStorage.menu = JSON.stringify(m)
+        dispatch({ type: UPDATE_FROM_FIREBASE, payload: { ...m } })
     }
 }

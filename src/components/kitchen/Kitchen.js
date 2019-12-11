@@ -18,8 +18,9 @@ function Kitchen({ closeOrderAction, orders }) {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si, cerrar'
         }).then((result) => {
-            closeOrderAction(order)
+
             if (result.value) {
+                closeOrderAction(order)
                 Swal.fire(
                     '¡Cerrada!',
                     'El mesero ha sido notificado',

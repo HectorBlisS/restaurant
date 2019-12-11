@@ -1,0 +1,18 @@
+.card{
+    position: relative;
+    width:300px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    box-shadow: 0px 5px 8px #ccc;
+    padding:10px 0;
+    cursor: pointer;
+    margin:10px 5px;
+    transition:all .3s ease;
+    flex-direction: column;
+    padding: 20px;
+}
+.card:active{
+    box-shadow: 1px 5px 8px grey;
+
+}
