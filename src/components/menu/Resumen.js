@@ -4,23 +4,29 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/fontawesome-free-solid'
 import { Button } from 'antd'
 import FoodModal from './FoodModal'
+import { addToOrderAction } from '../../redux/menuDuck'
+import { connect } from 'react-redux'
 
-export default function Resumen({ order }) {
+function Resumen({ addToOrderAction, order }) {
     let [open, setOpen] = useState(false)
     let [food, setFood] = useState(undefined)
 
     function renderOption(item, i) {
         return (
             <span key={i}>
-                {item.text + `, `}
+                {item + `, `}
             </span>
         )
     }
 
-    function editFood(item) {
-        console.log(item)
+    function editFood(item, i) {
         setOpen(true)
+        item.index = i
         setFood({ ...item })
+    }
+
+    function updateItem(item) {
+        addToOrderAction(item)
     }
 
     function renderCard(item, i) {
@@ -32,13 +38,13 @@ export default function Resumen({ order }) {
                     {/* <img src={item.pic} alt={item.name} /> */}
                     <p style={{ position: "absolute", right: 0, marginRight: 50 }} >$ {item.total} MXN</p>
                     <Button
-                        onClick={() => editFood(item)}
+                        onClick={() => editFood(item, i)}
                         className={styles.icon}>
                         <FontAwesomeIcon icon={faPencilAlt} />
                     </Button>
                 </div>
                 <div>
-                    {item.options.map(renderOption)}
+                    {item.extras && Object.keys(item.extras).map(renderOption)}
                 </div>
             </div>
 
@@ -50,7 +56,7 @@ export default function Resumen({ order }) {
             {order.map(renderCard)}
             {/* Modal */}
             <FoodModal
-                onAccept={(value) => console.log(value)}
+                onAccept={updateItem}
                 editing={true}
                 food={food}
                 onCancel={() => setOpen(false)}
@@ -58,3 +64,9 @@ export default function Resumen({ order }) {
         </div>
     )
 }
+
+function mapState() {
+    return {}
+}
+
+export default connect(mapState, { addToOrderAction })(Resumen)

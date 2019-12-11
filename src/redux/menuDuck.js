@@ -119,7 +119,7 @@ export default function reducer(state = initial, action) {
         case ADD_ORDER:
             return { ...state, orders: [...action.payload] }
         case ADD_TO_ORDER:
-            return { ...state, order: [...state.order, { ...action.payload }] }
+            return { ...state, order: [...action.payload] }
         case CATEGORY_SELECTED:
             return { ...state, category: { ...action.payload } }
         default:
@@ -199,8 +199,12 @@ export function addOrderAction(array) {
 }
 
 export function addToOrderAction(item) {
-    return dispatch => {
-        dispatch({ type: ADD_TO_ORDER, payload: { ...item } })
+    return (dispatch, getState) => {
+        let { order } = getState().menu
+        if (item.index) {
+            order.splice(item.index, 1, item)
+        } else order.push(item)
+        dispatch({ type: ADD_TO_ORDER, payload: [...order] })
     }
 }
 

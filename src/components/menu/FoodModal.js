@@ -3,23 +3,20 @@ import { Modal } from 'antd'
 import styles from './menu.module.css'
 
 export default function FoodModal({ onAccept, food = {}, visible, onCancel, editing }) {
-    let [quantity, setQuantity] = useState(1)
-    let [options, setOptions] = useState(food.options || {})
+    let [quantity, setQuantity] = useState(food.quantity || 1)
+    let [options, setOptions] = useState(food.extras || {})
     let [unitary, setUnitary] = useState(food.price || 0)
     let [total, setTotal] = useState(food.price || 0)
 
 
-    // useEffect(() => {
-    //     // console.log(food.options)
-    //     if (editing) {
-    //         setOptions({ ...food.options })
-    //         setUnitary(food.price)
-    //         setQuantity(food.quantity)
-    //         // console.log(food)
-    //     } else {
-    //         setQuantity(1)
-    //     }
-    // }, [food])
+    useEffect(() => {
+        // console.log(food.options)
+        if (editing) {
+            setQuantity(food.quantity)
+        } else {
+            setQuantity(1)
+        }
+    }, [food])
 
     useEffect(() => {
         getTotal()
@@ -31,10 +28,12 @@ export default function FoodModal({ onAccept, food = {}, visible, onCancel, edit
         let format = {
             ...food,
             price: unitary,
-            options: Object.values(options).filter(o => Boolean(o)),
+            optionsSelected: Object.values(options).filter(o => Boolean(o)),
+            extras: options,
             quantity,
             total
         }
+        console.log(format)
         onAccept(format)
         onCancel()
     }
@@ -59,14 +58,17 @@ export default function FoodModal({ onAccept, food = {}, visible, onCancel, edit
     }
 
     function optionClicked(item) {
-        if (options[item.text]) setOptions({ ...options, [item.text]: false })
+        if (options[item.text]) {
+            setOptions({ ...options, [item.text]: false })
+        }
         else setOptions({ ...options, [item.text]: { ...item } })
     }
 
     function renderOption(item, i) {
+        let ops = { ...food.extras, ...options }
         return (
             <div onClick={() => optionClicked(item)} key={i} className={styles.optionCard}>
-                <input checked={options[item.text]} type="checkbox" />
+                <input checked={ops[item.text]} type="checkbox" />
                 <span>{item.text} {item.price && `+ $ ${item.price}`}</span>
             </div>
         )

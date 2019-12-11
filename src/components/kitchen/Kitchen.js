@@ -42,7 +42,7 @@ function Kitchen({ closeOrderAction, orders }) {
                 return (
                     <div key={index}>
                         <h3 key={index}>{item.name}</h3>
-                        {item.options.map((op, ind) => <p key={ind} >{op.text}</p>)}
+                        {item.extras && Object.keys(item.extras).map((op, ind) => <p key={ind} >{op}</p>)}
                     </div>
                 )
             })}
