@@ -26,7 +26,7 @@ function NavBar({ history, total = 5000 }) {
                 </strong> </p> */}
 
             <Drawer
-                title="Secciones"
+                title="Burguer Queen"
                 placement={"left"}
                 closable={false}
                 onClose={() => setOpen(false)}

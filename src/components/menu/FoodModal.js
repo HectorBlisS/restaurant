@@ -82,6 +82,15 @@ export default function FoodModal({ onAccept, food = {}, visible, onCancel, edit
                 <div className={styles.modalCover}>
                     <div style={{ backgroundImage: `url('${food.pic}')` }} className={styles.modalPic} src={food.pic} />
                     <div className={styles.changes}>
+                        <div >
+                            <h3>{food.name}</h3>
+                            <div className={styles.modalTotal}>
+                                <p>${total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} MXN</p>
+                            </div>
+                        </div>
+
+
+
                         <div className={styles.qButtons}>
                             <button
                                 onClick={() => changeQuantity(false)}
@@ -94,19 +103,17 @@ export default function FoodModal({ onAccept, food = {}, visible, onCancel, edit
                             >
                                 +
                         </button>
-                        </div>
-
-                        <div className={styles.options}>
+                            <div className={styles.options}>
                             {food.options && food.options.map(renderOption)}
                         </div>
+
+
                     </div>
 
-
+                </div>
 
                 </div>
-                <div className={styles.modalTotal}>
-                    <p>${total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}MXN</p>
-                </div>
+                <hr className={styles.line}/>
                 <div className={styles.modalFooter}>
                     <button
                         onClick={onCancel}
@@ -115,7 +122,7 @@ export default function FoodModal({ onAccept, food = {}, visible, onCancel, edit
                     </button>
                     <button
                         onClick={placeOrder}
-                        style={{ backgroundColor: "green" }}>
+                        style={{ backgroundColor: "#3a90df", color:"white" }}>
                         {editing ? "ACTUALIZAR" : "AGREGAR"}
                     </button>
                 </div>
