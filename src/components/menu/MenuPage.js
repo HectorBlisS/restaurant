@@ -52,7 +52,7 @@ function mapState({ menu }) {
     return {
         categories: menu.groups,
         items,
-        order: menu.order
+        order: menu.order,
     }
 }
 

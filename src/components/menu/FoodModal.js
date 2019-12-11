@@ -36,7 +36,6 @@ export default function FoodModal({ onRemove, onAccept, food = {}, visible, onCa
             quantity,
             total
         }
-        console.log(format)
         onAccept(format)
         onCancel()
     }

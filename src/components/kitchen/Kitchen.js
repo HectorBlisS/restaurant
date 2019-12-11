@@ -36,7 +36,7 @@ function Kitchen({ closeOrderAction, orders }) {
         return <div onClick={() => close(order)} className={`${styles.card} ${color}`} key={i}>
             <div className={styles.header}>
                 <h3>{moment(order.date).fromNow()}</h3>
-                <p>Mesa: 1</p>
+                {order.table && <p>Mesa: {order.table._id} - {order.table.name}</p>}
             </div>
             {order.items.map((item, index) => {
                 let options = []

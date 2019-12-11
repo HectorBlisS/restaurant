@@ -1,7 +1,14 @@
-import { createUser } from '../services/firebase'
+import { createUser, addOrder } from '../services/firebase'
 import toastr from 'toastr'
 
 let initial = {
+    table: { _id: 4, active: true, people: 4, name: "hectitor" },
+    tables: {
+        1: { _id: 1, active: true, people: 1, name: "" },
+        2: { _id: 2, active: true, people: 2, name: "" },
+        3: { _id: 3, active: true, people: 0, name: "" },
+        4: { _id: 4, active: true, people: 4, name: "hectitor" }
+    },
     groups: {
         BREAKFAST: {
             _id: "BREAKFAST",
@@ -105,9 +112,10 @@ export default function reducer(state = initial, action) {
             if (m) return { ...state, ...m }
             else return { ...state }
 
+        case SELECT_TABLE:
+            return { ...state, table: { ...action.payload } }
         case UPDATE_FROM_FIREBASE:
             return { ...state, ...action.payload }
-
         case CREATE_ADMIN_USER_SUCCESS:
             return { ...state, users: { ...action.payload } }
         case SAVE_FOOD:
@@ -140,6 +148,16 @@ let CREATE_ADMIN_USER = "CREATE_ADMIN_USER"
 let CREATE_ADMIN_USER_SUCCESS = "CREATE_ADMIN_USER_SUCCESS"
 let CREATE_ADMIN_USER_ERROR = "CREATE_ADMIN_USER_ERROR"
 let UPDATE_FROM_FIREBASE = "UPDATE_FROM_FIREBASE"
+let SELECT_TABLE = "SELECT_TABLE"
+
+export function selectTableAction(id) {
+    return (dispatch, getState) => {
+        let { menu } = getState()
+        let { tables, table } = menu
+        table = { ...tables[id] }
+        dispatch({ type: SELECT_TABLE, payload: { ...table } })
+    }
+}
 
 export function createUserAction(user) {
     return (dispatch, getState) => {
@@ -186,16 +204,21 @@ export function closeOrderAction(order) {
 
 export function addOrderAction(array) {
     return (dispatch, getState) => {
-        let { orders } = getState().menu
+        let { orders, table } = getState().menu
         let { menu } = getState()
         let order = {
             date: Date.now(),
             items: [...array],
-            finished: false
+            finished: false,
+            table
         }
         orders.push(order)
         let m = { ...menu, orders, order: [] }
+        //save
         localStorage.menu = JSON.stringify(m)
+        //DB
+        addOrder(order)
+        //
         dispatch({ type: ADD_ORDER, payload: [...orders] })
         dispatch({ type: RESET_ORDER })
     }
@@ -240,6 +263,15 @@ export function updateUsersFromDBAction(array) {
         let { menu } = getState()
         let { users } = menu
         let m = { ...menu, users: [...array] }
+        localStorage.menu = JSON.stringify(m)
+        dispatch({ type: UPDATE_FROM_FIREBASE, payload: { ...m } })
+    }
+}
+export function updateOrdersFromDBAction(array) {
+    return (dispatch, getState) => {
+        let { menu } = getState()
+        let { orders } = menu
+        let m = { ...menu, orders: [...array] }
         localStorage.menu = JSON.stringify(m)
         dispatch({ type: UPDATE_FROM_FIREBASE, payload: { ...m } })
     }
