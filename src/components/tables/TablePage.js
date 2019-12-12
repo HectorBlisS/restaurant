@@ -14,6 +14,7 @@ function TablePage({ upateTableAction, tables }) {
     function renderTable(table, i) {
         return (
             <div onClick={() => editTable(table)} className={styles.card}>
+                <h2>Mesa {table._id}</h2>
                 <Tag style={{ width: "100%", textAlign: "center" }}
                     color={table.active ? "green" : "red"}
                 >{table.active ? "ACTIVA" : "CERRADA"}</Tag>
