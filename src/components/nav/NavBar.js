@@ -2,14 +2,18 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faClipboardList, faBeer, faUtensils, faDoorClosed, faUserCog } from '@fortawesome/fontawesome-free-solid'
 import styles from './nav.module.css'
-import { Drawer } from 'antd';
+import { Drawer, Select } from 'antd';
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { logOutAction } from '../../redux/userDuck'
+import { selectTableAction } from '../../redux/menuDuck'
+
+let { Option } = Select
 
 
 
 
-
-function NavBar({ history, total = 5000 }) {
+function NavBar({ table, tables, selectTableAction, logOutAction, history, total = 5000 }) {
     let [open, setOpen] = useState(false)
 
     function navigate(route) {
@@ -17,13 +21,29 @@ function NavBar({ history, total = 5000 }) {
         history.push(route)
     }
 
+    function onLogout() {
+        logOutAction()
+            .then(r => {
+                setOpen(false)
+                history.push('/')
+            })
+    }
+
+    function onSelectTable(value) {
+        selectTableAction(value)
+    }
+
     return (
         <div className={styles.container}>
             <FontAwesomeIcon onClick={() => setOpen(true)} className={styles.icon} icon={faBars} />
             <h2>Burguer Queen</h2>
-            {/* <p>Total de la orden: <strong>
-                ${total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}MXN
-                </strong> </p> */}
+            <Select
+                value={table._id}
+                onChange={onSelectTable}
+                style={{ width: 100, marginLeft: 130 }}
+            >
+                {tables.map((t, i) => <Option value={t._id} >{t._id} - {t.name}</Option>)}
+            </Select>
 
             <Drawer
                 title="Burguer Queen"
@@ -59,7 +79,9 @@ function NavBar({ history, total = 5000 }) {
                             icon={faUserCog} />
                         <p>Admin</p>
                     </span>
-                    <span className={styles.navButton} >
+                    <span
+                        onClick={onLogout}
+                        className={styles.navButton} >
                         <FontAwesomeIcon
                             className={styles.icon}
                             icon={faDoorClosed} />
@@ -73,4 +95,13 @@ function NavBar({ history, total = 5000 }) {
     )
 }
 
-export default withRouter(NavBar)
+function mapState({ menu }) {
+    let tables = Object.values(menu.tables)
+    console.log(tables)
+    return {
+        tables,
+        table: menu.table
+    }
+}
+
+export default connect(mapState, { selectTableAction, logOutAction })(withRouter(NavBar))

@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
-import { updateUsersFromDBAction } from '../redux/menuDuck'
+import { updateUsersFromDBAction, updateOrdersFromDBAction } from '../redux/menuDuck'
 
 let firebaseConfig = {
     apiKey: "AIzaSyACb7imRmi0T5rHkZ3zanCvr3Qr2zSgE1Q",
@@ -17,6 +17,26 @@ firebase.initializeApp(firebaseConfig);
 
 let db = firebase.firestore();
 let adminsRef = db.collection('admins')
+let ordersRef = db.collection('orders')
+
+export function passwordRecovery(email) {
+    return firebase.auth().sendPasswordResetEmail(email)
+}
+
+export function addOrder(order) {
+    return ordersRef.add(order)
+        .then(r => {
+            console.log(r)
+        })
+}
+
+export function signOut() {
+    return firebase.auth().signOut()
+}
+
+export function signIn(email, password) {
+    return firebase.auth().signInWithEmailAndPassword(email, password)
+}
 
 export function createUser(data) {
     return firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
@@ -29,6 +49,12 @@ export function setDataListeners(dispatch, getState) {
             let docs = []
             snaps.forEach(doc => docs.push(doc.data()))
             updateUsersFromDBAction(docs)(dispatch, getState)
+        });
+    db.collection("orders")
+        .onSnapshot(function (snaps) {
+            let docs = []
+            snaps.forEach(doc => docs.push(doc.data()))
+            updateOrdersFromDBAction(docs)(dispatch, getState)
         });
 }
 

@@ -2,9 +2,11 @@ import { createStore, combineReducers, compose, applyMiddleware } from 'redux'
 import menuReducer from './menuDuck'
 import thunk from 'redux-thunk'
 import { setDataListeners } from '../services/firebase'
+import userReducer from './userDuck'
 
 let rootReducer = combineReducers({
-    menu: menuReducer
+    menu: menuReducer,
+    user: userReducer
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
