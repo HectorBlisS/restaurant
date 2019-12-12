@@ -184,6 +184,9 @@ font-size: 1.5rem;
 .cardContent h2{
     margin-right: 5px;
 }
+.cardContent .itemName{
+    width:200px;
+}
 .finish{
     position:fixed;
     bottom:0;
@@ -216,8 +219,8 @@ font-size: 1.5rem;
 
 .icon{
     position: absolute; 
-    right: -120px;
-    margin-right: 0;
+    right: 15px; 
+    /* margin-right: 0; */
 }
 .icon:active{
     color:orange;

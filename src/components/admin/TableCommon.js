@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table } from 'antd';
+import { Table, Tag } from 'antd';
 import moment from 'moment';
 
 export default function TableCommon({ columns, data }) {
@@ -21,7 +21,7 @@ export default function TableCommon({ columns, data }) {
             title: '¿Cerrada?',
             dataIndex: 'finished',
             key: 'finished',
-            render: value => <span>{value ? "Sí" : "No"}</span>,
+            render: value => <Tag color={value ? "green" : "red"} >{value ? "Sí" : "No"}</Tag>,
         }
     ];
 

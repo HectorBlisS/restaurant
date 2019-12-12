@@ -4,10 +4,10 @@ import toastr from 'toastr'
 let initial = {
     table: { _id: 4, active: true, people: 4, name: "hectitor" },
     tables: {
-        1: { _id: 1, active: true, people: 1, name: "" },
-        2: { _id: 2, active: true, people: 2, name: "" },
-        3: { _id: 3, active: true, people: 0, name: "" },
-        4: { _id: 4, active: true, people: 4, name: "hectitor" }
+        1: { _id: 1, active: false, people: 0, name: "Nicole", waiter: "BlisS" },
+        2: { _id: 2, active: false, people: 0, name: "Katia", waiter: "BlisS" },
+        3: { _id: 3, active: false, people: 0, name: "Luis", waiter: "BlisS" },
+        4: { _id: 4, active: true, people: 4, name: "Hectitor", waiter: "BlisS" }
     },
     groups: {
         BREAKFAST: {
@@ -112,6 +112,9 @@ export default function reducer(state = initial, action) {
             if (m) return { ...state, ...m }
             else return { ...state }
 
+
+        case UPDATE_TABLE:
+            return { ...state, tables: { ...action.payload } }
         case SELECT_TABLE:
             return { ...state, table: { ...action.payload } }
         case UPDATE_FROM_FIREBASE:
@@ -149,6 +152,18 @@ let CREATE_ADMIN_USER_SUCCESS = "CREATE_ADMIN_USER_SUCCESS"
 let CREATE_ADMIN_USER_ERROR = "CREATE_ADMIN_USER_ERROR"
 let UPDATE_FROM_FIREBASE = "UPDATE_FROM_FIREBASE"
 let SELECT_TABLE = "SELECT_TABLE"
+let UPDATE_TABLE = "UPDATE_TABLE"
+
+export function upateTableAction(table) {
+    return (dispatch, getState) => {
+        let { menu } = getState()
+        let { tables } = menu
+        tables[table._id] = { ...table }
+        let m = { ...menu, tables }
+        localStorage.menu = JSON.stringify(m)
+        dispatch({ type: UPDATE_TABLE, payload: tables })
+    }
+}
 
 export function selectTableAction(id) {
     return (dispatch, getState) => {

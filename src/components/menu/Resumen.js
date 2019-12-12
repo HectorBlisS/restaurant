@@ -45,9 +45,9 @@ function Resumen({ removeItemFromOrderAction, addToOrderAction, order }) {
             <div className={styles.resumenCard}>
                 <div key={i} className={styles.cardContent}>
                     <h2>{item.quantity}</h2>
-                    <p>{item.name}</p>
+                    <p className={styles.itemName}>{item.name}</p>
                     {/* <img src={item.pic} alt={item.name} /> */}
-                    <p style={{ position: "absolute", right: 0, marginRight: 50 }} >$ {item.total} MXN</p>
+                    <p>$ {item.total} MXN</p>
                     <Button
                         onClick={() => editFood(item, i)}
                         className={styles.icon}>

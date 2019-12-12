@@ -5,6 +5,7 @@ import MenuPage from './components/menu/MenuPage'
 import Kitchen from './components/kitchen/Kitchen'
 import AdminPage from './components/admin/AdminPage'
 import toastr from 'toastr'
+import TablePage from './components/tables/TablePage'
 
 function PublicRoute({ redirect, path, component, ...rest }) {
     let isLogged = localStorage.getItem('token')
@@ -29,6 +30,7 @@ export default function Routes() {
             <PublicRoute exact path="/" component={Home} redirect="/menu" />
             <PrivateRoute path="/menu" component={MenuPage} redirect="/" />
             <PrivateRoute path="/comandas" component={Kitchen} redirect="/" />
+            <PrivateRoute path="/mesas" component={TablePage} redirect="/" />
             <AdminRoute path="/admin" component={AdminPage} redirect="/" />
         </Switch>
     )

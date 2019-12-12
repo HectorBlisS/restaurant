@@ -51,8 +51,10 @@ function Home({ fetching, history, loginAction, error }) {
                 <button
                     type="submit"
                     size="large">
-                    {fetching ? <Spin /> : "Entrar"}
+                    {fetching ? <Spin sie="large" />
+                        : "Entrar"}
                 </button>
+
                 <Divider />
                 <a onClick={() => setOpen(true)} >¿Olvidaste tu contraseña?</a>
             </form>
@@ -69,7 +71,7 @@ function Home({ fetching, history, loginAction, error }) {
                 }} placeholder="tu@email.com" />
 
             </Modal>
-        </div>
+        </div >
     )
 }
 

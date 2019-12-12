@@ -48,7 +48,6 @@ export function loginAction(form) {
         dispatch({ type: LOGIN })
         return signIn(form.email, form.password)
             .then(res => {
-                console.log(res)
                 localStorage.token = res.user.access_token
                 localStorage.user = JSON.stringify(res.user)
                 dispatch({ type: LOGIN_SUCCESS, payload: res.user })

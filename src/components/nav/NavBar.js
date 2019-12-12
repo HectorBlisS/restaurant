@@ -60,7 +60,7 @@ function NavBar({ isLoggedIn, table, tables, selectTableAction, logOutAction, hi
                     <p>Menu</p>
 
                 </span>
-                <span className={styles.navButton} >
+                <span onClick={() => navigate('/mesas')} className={styles.navButton} >
                     <FontAwesomeIcon
                         className={styles.icon}
                         icon={faUtensils} />
@@ -96,7 +96,7 @@ function NavBar({ isLoggedIn, table, tables, selectTableAction, logOutAction, hi
 }
 
 function mapState({ menu, user }) {
-    let tables = Object.values(menu.tables)
+    let tables = Object.values(menu.tables).filter(t => t.active)
     return {
         tables,
         table: menu.table,

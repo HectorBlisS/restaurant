@@ -17,9 +17,10 @@
     align-items: center;
 }
 .form button{
-    border: none;
-    background: cornflowerblue;
-    color:white;
+    border: .5px solid cornflowerblue;
+    background: white;
+    color:cornflowerblue;
     padding:10px 20px;
     width:100%;
+    outline: none;
 }
