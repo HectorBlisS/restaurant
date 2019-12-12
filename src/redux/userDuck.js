@@ -7,6 +7,14 @@ let initial = {
 
 export default function reducer(state = initial, action) {
     switch (action.type) {
+        case "GET_INITIAL_DATA":
+            let user = localStorage.getItem('user')
+            if (user) {
+                user = JSON.parse(user)
+                return { ...state, ...user, isLoggedIn: true }
+            }
+
+
         case LOGOUT:
             return { ...initial }
         case LOGIN:
@@ -28,6 +36,7 @@ let LOGOUT = "LOGOUT"
 export function logOutAction() {
     return dispatch => {
         localStorage.removeItem('token')
+        localStorage.removeItem('user')
         signOut()
         dispatch({ type: LOGOUT })
         return Promise.resolve(true)
@@ -41,6 +50,7 @@ export function loginAction(form) {
             .then(res => {
                 console.log(res)
                 localStorage.token = res.user.access_token
+                localStorage.user = JSON.stringify(res.user)
                 dispatch({ type: LOGIN_SUCCESS, payload: res.user })
                 return true
             })

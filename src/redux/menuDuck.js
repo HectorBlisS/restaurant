@@ -1,4 +1,4 @@
-import { createUser, addOrder } from '../services/firebase'
+import { createUser, addOrder, updatOrder, saveFood } from '../services/firebase'
 import toastr from 'toastr'
 
 let initial = {
@@ -186,6 +186,8 @@ export function saveFoodAction(food) {
         items[food._id] = food
         let m = { ...menu, items }
         localStorage.menu = JSON.stringify(m)
+        // firebase
+        saveFood(food)
         dispatch({ type: SAVE_FOOD, payload: { ...items } })
     }
 }
@@ -195,9 +197,12 @@ export function closeOrderAction(order) {
         let { orders, history } = getState().menu
         let { menu } = getState()
         orders.splice(orders.indexOf(order), 1)
+        order.finished = true
         history.push(order)
         let m = { ...menu, orders, history }
         localStorage.menu = JSON.stringify(m)
+        // to firebase
+        updatOrder(order)
         dispatch({ type: CLOSE_ORDER, payload: { history, orders } })
     }
 }
@@ -261,7 +266,6 @@ export function selectCategoryAction(category) {
 export function updateUsersFromDBAction(array) {
     return (dispatch, getState) => {
         let { menu } = getState()
-        let { users } = menu
         let m = { ...menu, users: [...array] }
         localStorage.menu = JSON.stringify(m)
         dispatch({ type: UPDATE_FROM_FIREBASE, payload: { ...m } })
@@ -270,8 +274,23 @@ export function updateUsersFromDBAction(array) {
 export function updateOrdersFromDBAction(array) {
     return (dispatch, getState) => {
         let { menu } = getState()
-        let { orders } = menu
         let m = { ...menu, orders: [...array] }
+        localStorage.menu = JSON.stringify(m)
+        dispatch({ type: UPDATE_FROM_FIREBASE, payload: { ...m } })
+    }
+}
+export function updateAllOrdersAction(array) {
+    return (dispatch, getState) => {
+        let { menu } = getState()
+        let m = { ...menu, history: [...array] }
+        localStorage.menu = JSON.stringify(m)
+        dispatch({ type: UPDATE_FROM_FIREBASE, payload: { ...m } })
+    }
+}
+export function updateFoodFromDBAction(object) {
+    return (dispatch, getState) => {
+        let { menu } = getState()
+        let m = { ...menu, items: { ...object } }
         localStorage.menu = JSON.stringify(m)
         dispatch({ type: UPDATE_FROM_FIREBASE, payload: { ...m } })
     }

@@ -10,7 +10,10 @@ export default function FoodForm({ categories, food, onChange }) {
         setOption({ ...option, [name]: value })
     }
     function addOption() {
-        onChange({ target: { name: "options", value: [...food.options, { ...option }] } })
+        if (!food.options) {
+            onChange({ target: { name: "options", value: [{ ...option }] } })
+        }
+        else onChange({ target: { name: "options", value: [...food.options, { ...option }] } })
         setOption({})
     }
 

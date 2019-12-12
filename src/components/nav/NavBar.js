@@ -13,7 +13,7 @@ let { Option } = Select
 
 
 
-function NavBar({ table, tables, selectTableAction, logOutAction, history, total = 5000 }) {
+function NavBar({ isLoggedIn, table, tables, selectTableAction, logOutAction, history, total = 5000 }) {
     let [open, setOpen] = useState(false)
 
     function navigate(route) {
@@ -35,15 +35,15 @@ function NavBar({ table, tables, selectTableAction, logOutAction, history, total
 
     return (
         <div className={styles.container}>
-            <FontAwesomeIcon onClick={() => setOpen(true)} className={styles.icon} icon={faBars} />
+            {isLoggedIn && <FontAwesomeIcon onClick={() => setOpen(true)} className={styles.icon} icon={faBars} />}
             <h2>Burguer Queen</h2>
-            <Select
+            {isLoggedIn && <Select
                 value={table._id}
                 onChange={onSelectTable}
                 style={{ width: 100, marginLeft: 130 }}
             >
                 {tables.map((t, i) => <Option value={t._id} >{t._id} - {t.name}</Option>)}
-            </Select>
+            </Select>}
 
             <Drawer
                 title="Burguer Queen"
@@ -95,12 +95,12 @@ function NavBar({ table, tables, selectTableAction, logOutAction, history, total
     )
 }
 
-function mapState({ menu }) {
+function mapState({ menu, user }) {
     let tables = Object.values(menu.tables)
-    console.log(tables)
     return {
         tables,
-        table: menu.table
+        table: menu.table,
+        isLoggedIn: user.isLoggedIn
     }
 }
 

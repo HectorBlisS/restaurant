@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
-import { updateUsersFromDBAction, updateOrdersFromDBAction } from '../redux/menuDuck'
+import { updateUsersFromDBAction, updateFoodFromDBAction, updateOrdersFromDBAction, updateAllOrdersAction } from '../redux/menuDuck'
 
 let firebaseConfig = {
     apiKey: "AIzaSyACb7imRmi0T5rHkZ3zanCvr3Qr2zSgE1Q",
@@ -18,15 +18,29 @@ firebase.initializeApp(firebaseConfig);
 let db = firebase.firestore();
 let adminsRef = db.collection('admins')
 let ordersRef = db.collection('orders')
+let menuRef = db.collection('menu')
+
+export function saveFood(food) {
+    if (!food.id) food.id = menuRef.doc().id
+    return menuRef.doc(food.id).set(food)
+        .then(r => {
+            //console.log(r)
+        })
+}
+
+export function updatOrder(order) {
+    return ordersRef.doc(order.id).set(order)
+}
 
 export function passwordRecovery(email) {
     return firebase.auth().sendPasswordResetEmail(email)
 }
 
 export function addOrder(order) {
-    return ordersRef.add(order)
+    order.id = ordersRef.doc().id
+    return ordersRef.doc(order.id).set(order)
         .then(r => {
-            console.log(r)
+            //console.log(r)
         })
 }
 
@@ -54,7 +68,21 @@ export function setDataListeners(dispatch, getState) {
         .onSnapshot(function (snaps) {
             let docs = []
             snaps.forEach(doc => docs.push(doc.data()))
+            updateAllOrdersAction(docs)(dispatch, getState)
+        });
+    db.collection("orders").where("finished", "==", false)
+        .onSnapshot(function (snaps) {
+            let docs = []
+            snaps.forEach(doc => docs.push(doc.data()))
             updateOrdersFromDBAction(docs)(dispatch, getState)
+        });
+    db.collection("menu")
+        .onSnapshot(function (snaps) {
+            let docs = {}
+            snaps.forEach(doc => {
+                docs[doc.id] = doc.data()
+            })
+            updateFoodFromDBAction(docs)(dispatch, getState)
         });
 }
 

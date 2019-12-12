@@ -10,7 +10,7 @@ import styles from './admin.module.css'
 const { TabPane } = Tabs;
 let initial = { categories: {} }
 
-function AdminPage({users,  createUserAction, orders, saveFoodAction, categories, items }) {
+function AdminPage({users, createUserAction, orders, saveFoodAction, categories, items }) {
     let [food, setFood] = useState({ ...initial })
     let [user, setUser] = useState({})
     let [open, setOpen] = useState(false)
@@ -193,7 +193,7 @@ function AdminPage({users,  createUserAction, orders, saveFoodAction, categories
 function mapState({menu}) {
     return {
         users:menu.users,
-        orders: menu.history,
+        orders:menu.history,
         categories: Object.keys(menu.groups),
         items: Object.values(menu.items)
         }

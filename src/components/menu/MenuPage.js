@@ -9,7 +9,7 @@ import FoodModal from './FoodModal'
 import FinishOrder from './FinishOrder'
 
 
-function MenuPage({ addOrderAction, order, addToOrderAction, selectCategoryAction, categories, items }) {
+function MenuPage({ category, addOrderAction, order, addToOrderAction, selectCategoryAction, categories, items }) {
     let [open, setOpen] = useState(true)
     let [food, setFood] = useState(null)
 
@@ -29,7 +29,7 @@ function MenuPage({ addOrderAction, order, addToOrderAction, selectCategoryActio
     return (
         <div >
             <div className={styles.container}>
-                <Categories onClick={onClickCategory} categories={categories} />
+                <Categories category={category} onClick={onClickCategory} categories={categories} />
                 <Items onClick={itemSelected} items={items} />
                 <Resumen order={order} />
 
@@ -51,6 +51,7 @@ function mapState({ menu }) {
     let items = Object.values(menu.items).filter(i => i.categories[categoryName])
     return {
         categories: menu.groups,
+        category: menu.category.name,
         items,
         order: menu.order,
     }

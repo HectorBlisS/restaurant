@@ -47,7 +47,7 @@ function Kitchen({ closeOrderAction, orders }) {
                 }
                 return (
                     <div key={index}>
-                        <h3 key={index}>{item.name}</h3>
+                        <h3 key={index}> {item.quantity} X {item.name}</h3>
                         {options.map((op, ind) => <p key={ind} >{op}</p>)}
                     </div>
                 )
@@ -65,7 +65,6 @@ function Kitchen({ closeOrderAction, orders }) {
 }
 
 function mapState({ menu }) {
-    console.log(menu.orders)
     return {
         orders: menu.orders
     }

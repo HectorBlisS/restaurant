@@ -41,6 +41,9 @@
     background-position: center;
 
 }
+.cardcategoryActive{
+    opacity: .7;
+}
 
 .card div{
     margin-left: 10px;

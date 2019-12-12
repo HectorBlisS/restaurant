@@ -16,3 +16,10 @@
     justify-content: center;
     align-items: center;
 }
+.form button{
+    border: none;
+    background: cornflowerblue;
+    color:white;
+    padding:10px 20px;
+    width:100%;
+}

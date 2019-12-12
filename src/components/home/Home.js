@@ -19,7 +19,8 @@ function Home({ fetching, history, loginAction, error }) {
     function onChange({ target: { name, value } }) {
         setForm({ ...form, [name]: value })
     }
-    function onLogin() {
+    function onLogin(e) {
+        e.preventDefault()
         loginAction(form)
             .then(r => {
                 if (r) history.push('/menu')
@@ -39,20 +40,22 @@ function Home({ fetching, history, loginAction, error }) {
         <div className={styles.container}>
             <h1>Burguer Queen</h1>
 
-            <div className={styles.form}>
+            <form
+                onSubmit={onLogin}
+                className={styles.form}>
                 <Divider />
                 <Input value={form.email} onChange={onChange} size="large" name="email" placeholder="Email" />
                 <br />
                 <Input type="password" value={form.password} onChange={onChange} size="large" name="password" placeholder="Contraseña" />
                 <br />
-                <Button
-                    onClick={onLogin}
+                <button
+                    type="submit"
                     size="large">
                     {fetching ? <Spin /> : "Entrar"}
-                </Button>
+                </button>
                 <Divider />
                 <a onClick={() => setOpen(true)} >¿Olvidaste tu contraseña?</a>
-            </div>
+            </form>
 
             <Modal
                 onOk={onRecoverPassword}
